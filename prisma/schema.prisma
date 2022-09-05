@@ -1,0 +1,50 @@
+// schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Post {
+  id        String    @id @default(cuid())
+  title     String
+  content   String?
+  published String
+  category  String?
+  likes     Int       @default(0)
+  views     Int       @default(0)
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  author    User?     @relation(fields: [authorId], references: [id])
+  authorId  String?
+  idLiked   String[]  @default([])
+  Comment   Comment[]
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  email     String?   @unique
+  password  String
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  posts     Post[]
+  Comment   Comment[]
+
+  @@map(name: "Users")
+}
+
+model Comment {
+  id            String   @id @default(cuid())
+  content       String?
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  updatedAt     DateTime @updatedAt @map(name: "updated_at")
+  authorComment String
+  authorId      String?
+  commentator   User?    @relation(fields: [authorId], references: [id])
+  Post          Post?    @relation(fields: [postId], references: [id])
+  postId        String?
+}

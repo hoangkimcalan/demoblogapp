@@ -1,0 +1,10 @@
+users => user => 1,comments
+                 2, posts
+
+posts => post => 1,comments
+                 2, only author
+
+prisma, pages/api/post/detail, pages/posts/detail
+add method POST in pages/api/post/detail/[id].js : {
+    create, findMany
+}
